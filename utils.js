@@ -18,11 +18,10 @@ a function to rename a filename by appending hash value.
 input: ('./file.css', 'a {}', {algorithm: 'sha256', trim: 10})   output: ./file.a1b2c3d4e5.css
 */
 function rename(file, css, opts) {
-    return path.format({
-        dir: path.dirname(file),
-        name: path.parse(file).name + '.' + hash(css, opts.algorithm, opts.trim),
-        ext: path.extname(file)
-    });
+    return file
+      .substr(0, file.lastIndexOf('.')) + '.' +
+      hash(css, opts.algorithm, opts.trim) +
+      path.extname(file);
 }
 
 /*

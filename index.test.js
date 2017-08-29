@@ -49,7 +49,7 @@ test('hash module', () => {
 
 test('rename module', () => {
     const file = './in/file01.css';
-    const opts = { algorithm: 'md5', trim: 5 };
+    const opts = { algorithm: 'sha', trim: 5 };
     const hash = utils.hash(content(file), opts.algorithm, opts.trim);
 
     expect.assertions(1);
