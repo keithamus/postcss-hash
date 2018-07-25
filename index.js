@@ -18,7 +18,7 @@ module.exports = postcss.plugin('postcss-hash', (opts) => {
 
         // replace filename
         originalName = result.opts.to;
-        result.opts.to = utils.rename(originalName, root.source.input.css, opts);
+        result.opts.to = utils.rename(originalName, root.toString(), opts);
 
         // create/update manifest.json
         newData = utils.data(originalName, result.opts.to);
