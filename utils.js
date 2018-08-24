@@ -13,15 +13,22 @@ function hash(css, algorithm, trim) {
       .substr(0, trim);
 }
 
+
+function defaultName(parts) {
+    return path.join(parts.dir, parts.name + '.' + parts.hash + parts.ext);
+}
+
 /*
 a function to rename a filename by appending hash value.
 input: ('./file.css', 'a {}', {algorithm: 'sha256', trim: 10})   output: ./file.a1b2c3d4e5.css
 */
 function rename(file, css, opts) {
-    return file
-      .substr(0, file.lastIndexOf('.')) + '.' +
-      hash(css, opts.algorithm, opts.trim) +
-      path.extname(file);
+    return opts.name({
+        dir: path.dirname(file),
+        name : path.basename(file, path.extname(file)),
+        ext: path.extname(file),
+        hash: hash(css, opts.algorithm, opts.trim)
+    });
 }
 
 /*
@@ -39,4 +46,5 @@ function data(originalName, hashedName) {
 
 module.exports.hash = hash;
 module.exports.rename = rename;
+module.exports.defaultName = defaultName;
 module.exports.data = data;
