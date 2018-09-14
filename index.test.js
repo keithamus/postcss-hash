@@ -1,7 +1,7 @@
 'use strict';
 
 const mockfs = require('mock-fs');
-const fs = require('fs-extra');
+const fs = require('fs');
 const postcss = require('postcss');
 const path = require('path');
 
