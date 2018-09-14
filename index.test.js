@@ -4,6 +4,7 @@ const mockfs = require('mock-fs');
 const fs = require('fs');
 const postcss = require('postcss');
 const path = require('path');
+const os = require('os');
 
 const utils = require('./utils');
 const plugin = require('./');
@@ -78,7 +79,7 @@ test('data module', () => {
 
 test('plugin', () => {
     const root = './in';
-    const opts = { algorithm: 'md5', trim: 5 };
+    const opts = { algorithm: 'md5', trim: 5, manifest: path.join(os.tmpdir(), 'manifest.json') };
 
     const files = fs.readdirSync(root);
 
