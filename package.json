@@ -48,7 +48,7 @@
   },
   "scripts": {
     "lint": "eslint --init",
-    "test": "jest && eslint *.js",
+    "test": "eslint *.js && jest",
     "test:watch": "jest --watch"
   },
   "eslintConfig": {
