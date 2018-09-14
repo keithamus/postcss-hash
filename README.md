@@ -63,6 +63,14 @@ Hash's length.
 ### manifest `(string, default: './manifest.json')`
 Will output a `manifest` file with `key: value` pairs.
 
+### name `(function, default: ({dir, name, hash, ext}) => path.join(dir, name + '.' + hash + ext)
+Pass a function to customise the name of the output file. The function is given an object of string values:
+
+ - dir: the directory name as a string
+ - name: the name of the file, excluding any extensions
+ - hash: the resulting hash digest of the file
+ - ext: the extension of the file
+
 **NOTE:**
 1. The values will be either appended or replaced. If this file needs be recreated on each run, you'll have to manually delete it.
 2. `key`s are generated with files' `basename`. If you have `./input/A/one.css` & `./input/B/one.css`, only the last entry will exist.

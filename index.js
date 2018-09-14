@@ -9,7 +9,8 @@ module.exports = postcss.plugin('postcss-hash', (opts) => {
     opts = _.defaults(opts, {
         algorithm: 'md5',
         trim: 10,
-        manifest: './manifest.json'
+        manifest: './manifest.json',
+        name: utils.defaultName
     });
 
     return function (root, result) {

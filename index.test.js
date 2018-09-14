@@ -47,9 +47,20 @@ test('hash module', () => {
     expect(utils.hash(content(file), 'sha256', 5)).toHaveLength(5);
 });
 
+test('defaultName module', () => {
+    const parts = {
+        dir: 'in',
+        name: 'file01',
+        hash: 'deadbeef',
+        ext: '.css'
+    };
+    expect.assertions(1);
+    expect(utils.defaultName(parts)).toBe('in/file01.deadbeef.css');
+});
+
 test('rename module', () => {
     const file = './in/file01.css';
-    const opts = { algorithm: 'sha', trim: 5 };
+    const opts = { algorithm: 'sha256', trim: 5, name: utils.defaultName };
     const hash = utils.hash(content(file), opts.algorithm, opts.trim);
 
     expect.assertions(1);
@@ -58,7 +69,7 @@ test('rename module', () => {
 
 test('data module', () => {
     const file = './in/file01.css';
-    const opts = { algorithm: 'md5', trim: 5 };
+    const opts = { algorithm: 'md5', trim: 5, name: utils.defaultName };
     const renamedFile = utils.rename(file, content(file), opts);
 
     expect.assertions(1);
