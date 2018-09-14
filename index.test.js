@@ -22,6 +22,7 @@ afterEach(() => {
         try {
             unlinkSync(join(tmpdir(), file));
         } catch (e) {
+            // Ignore
         }
     });
 })
@@ -68,11 +69,12 @@ test('plugin', () => {
     const files = readdirSync(tmpdir()).filter(name => /css$/.test(name));
 
     return Promise.all(files.map(file => {
-        return postcss([ plugin(opts)]).process(readFileSync(join(tmpdir(), file), 'utf-8'), {
+        const filePath = join(tmpdir(), file);
+        return postcss([ plugin(opts)]).process(readFileSync(filePath, 'utf-8'), {
             from: file,
             to: file
         }).then(result => {
-            const hash = utils.hash(readFileSync(join(tmpdir(), file), 'utf-8'), opts.algorithm, opts.trim);
+            const hash = utils.hash(readFileSync(filePath, 'utf-8'), opts.algorithm, opts.trim);
 
             expect(result.opts.to).toMatch(new RegExp(hash));
             expect(result.warnings().length).toBe(0);
