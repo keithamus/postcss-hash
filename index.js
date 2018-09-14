@@ -2,16 +2,15 @@
 
 const fs = require('fs-extra');
 const postcss = require('postcss');
-const _ = require('lodash');
 const utils = require('./utils');
 
 module.exports = postcss.plugin('postcss-hash', (opts) => {
-    opts = _.defaults(opts, {
+    opts = Object.assign({
         algorithm: 'md5',
         trim: 10,
         manifest: './manifest.json',
         name: utils.defaultName
-    });
+    }, opts);
 
     return function (root, result) {
         var [oldData, newData] = [{}, {}];
@@ -27,7 +26,7 @@ module.exports = postcss.plugin('postcss-hash', (opts) => {
             oldData = fs.readJsonSync(opts.manifest);
             fs.outputJsonSync(
               opts.manifest,
-              _.assign(oldData, newData),
+              Object.assign(oldData, newData),
               { spaces: 2 }
             );
         } catch (e) {
