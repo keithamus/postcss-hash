@@ -7,13 +7,23 @@ const { readFileSync, writeFileSync, readdirSync, unlinkSync } = require("fs");
 const utils = require("./utils");
 const plugin = require("./");
 
+const tryUnlink = file => {
+    try {
+        unlinkSync(file);
+    } catch (e) {
+        // Ignore
+    }
+};
+
 const CSS_FILES = {
     "file01.css": ".a {}",
     "file02.css": ".b {background-color: #fff}",
     "file03.scss": ".c {}"
 };
+const MANIFEST_FILES = ["manifest.json"];
 
 beforeEach(() => {
+    MANIFEST_FILES.forEach(file => tryUnlink(join(tmpdir(), file)));
     Object.keys(CSS_FILES).forEach(file =>
         writeFileSync(join(tmpdir(), file), CSS_FILES[file])
     );
@@ -21,14 +31,8 @@ beforeEach(() => {
 
 afterEach(() => {
     Object.keys(CSS_FILES)
-        .concat("manifest.json")
-        .forEach(file => {
-            try {
-                unlinkSync(join(tmpdir(), file));
-            } catch (e) {
-                // Ignore
-            }
-        });
+        .concat(MANIFEST_FILES)
+        .forEach(file => tryUnlink(join(tmpdir(), file)));
 });
 
 test("hash module", () => {
@@ -101,6 +105,11 @@ test("plugin", () => {
 
                     expect(result.opts.to).toMatch(new RegExp(hash));
                     expect(result.warnings().length).toBe(0);
+                    const manifest = JSON.parse(
+                        readFileSync(join(tmpdir(), "manifest.json"))
+                    );
+                    expect(typeof manifest).toBe("object");
+                    expect(manifest).toHaveProperty([file], result.opts.to);
                 });
         })
     );
