@@ -1,6 +1,6 @@
 {
   "name": "postcss-hash",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "PostCSS plugin to replace output file names with HASH algorithms (md5, sha256, sha512, etc) and string length of your choice - for cache busting",
   "keywords": [
     "postcss",
