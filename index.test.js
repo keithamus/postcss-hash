@@ -114,3 +114,27 @@ test("plugin", () => {
         })
     );
 });
+
+test("plugin ensures manifest directory is created", () => {
+    const opts = {
+        algorithm: "md5",
+        trim: 5,
+        manifest: join(tmpdir(), "foo/bar/baz/manifest.json")
+    };
+    const filePath = join(tmpdir(), "file01.css");
+    return postcss([plugin(opts)])
+        .process(readFileSync(filePath, "utf-8"), {
+            from: filePath,
+            to: filePath
+        })
+        .then(result => {
+            const hash = utils.hash(
+                readFileSync(filePath, "utf-8"),
+                opts.algorithm,
+                opts.trim
+            );
+
+            expect(result.opts.to).toMatch(new RegExp(hash));
+            expect(result.warnings().length).toBe(0);
+        });
+});

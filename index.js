@@ -4,6 +4,7 @@ const { readFileSync, writeFileSync } = require("fs");
 const { dirname } = require("path");
 const postcss = require("postcss");
 const utils = require("./utils");
+const mkdirp = require("mkdirp");
 
 module.exports = postcss.plugin("postcss-hash", opts => {
     opts = Object.assign(
@@ -28,6 +29,7 @@ module.exports = postcss.plugin("postcss-hash", opts => {
         // Well, using the async versions causes race conditions when this plugin
         // is called multiple times. Try switching to async versions and running the tests
         // and you'll see they fail
+        mkdirp.sync(dirname(opts.manifest))
         let oldData = {}
         try {
             oldData = JSON.parse(readFileSync(opts.manifest, "utf-8"));
