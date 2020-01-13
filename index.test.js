@@ -138,3 +138,27 @@ test("plugin ensures manifest directory is created", () => {
             expect(result.warnings().length).toBe(0);
         });
 });
+
+test("plugin will hash sourcemap with includeMap", () => {
+    const opts = {
+        algorithm: "sha512",
+        trim: 5,
+        includeMap: true,
+        manifest: join(tmpdir(), "foo/bar/baz/manifest.json")
+    };
+    const filePath = join(tmpdir(), "file01.css");
+    return postcss([plugin(opts)])
+        .process(readFileSync(filePath, "utf-8"), {
+            from: filePath,
+            to: filePath,
+            map: { inline: false },
+        })
+        .then(result => {
+            const expectedOutput = '.a {}\n/*# sourceMappingURL=file01.88aab.css.map */';
+            const hash = utils.hash(expectedOutput, opts.algorithm, opts.trim);
+
+            expect(result.css).toEqual(expectedOutput);
+            expect(result.opts.to).toMatch(new RegExp(hash));
+            expect(result.warnings().length).toBe(0);
+        });
+});
