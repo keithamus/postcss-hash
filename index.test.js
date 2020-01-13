@@ -154,12 +154,10 @@ test("plugin will hash sourcemap with includeMap", () => {
             map: { inline: false },
         })
         .then(result => {
-            const hash = utils.hash(
-                '.a {}\n/*# sourceMappingURL=file01.88aab.css.map */',
-                opts.algorithm,
-                opts.trim
-            );
+            const expectedOutput = '.a {}\n/*# sourceMappingURL=file01.88aab.css.map */';
+            const hash = utils.hash(expectedOutput, opts.algorithm, opts.trim);
 
+            expect(result.css).toEqual(expectedOutput);
             expect(result.opts.to).toMatch(new RegExp(hash));
             expect(result.warnings().length).toBe(0);
         });
