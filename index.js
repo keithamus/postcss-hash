@@ -52,7 +52,6 @@ module.exports = postcss.plugin("postcss-hash", opts => {
             // to the CSS and returns it as res[0]
             const res = map.generate()
 
-            console.log('changing opts.to', res[0])
             result.opts.to = utils.rename(originalName, res[0], opts);
         } else {
             result.opts.to = utils.rename(originalName, root.toString(), opts);
