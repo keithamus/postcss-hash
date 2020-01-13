@@ -56,6 +56,9 @@ module.exports = (ctx) => ({
 ### algorithm `(string, default: 'md5')`
 Uses node's inbuilt [crypto] module. Pass any `digest algorithm` that is supported in your environment. Possible values are: `md5`, `md4`, `md2`, `sha`, `sha1`, `sha224`, `sha256`, `sha384`, `sha512`.
 
+### includeMap `(boolean, default: false)`
+Setting `includeMap` to `true` will allow postcss-hash to hash the name of the sourcemap, as well hash the CSS _including_ the `sourceMappingURL` comment. You can set this option to true if you care about the hashed fingerprints matching the contents of the CSS file, and don't mind a performance hit of regenerating the CSS twice.
+
 
 ### trim `(number, default: 10)`
 Hash's length.
