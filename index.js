@@ -2,7 +2,6 @@
 
 const { readFileSync, writeFileSync } = require("fs");
 const { dirname, basename } = require("path");
-const postcss = require("postcss");
 const MapGenerator = require("postcss/lib/map-generator");
 const utils = require("./utils");
 const mkdirp = require("mkdirp");
@@ -21,7 +20,7 @@ module.exports = opts => {
 
     return {
         postcssPlugin: "postcss-hash",
-        Once(root, result) {
+        Once(root, { result, stringify }) {
             // replace filename
             const originalName = result.opts.to;
             result.opts.to = utils.rename(originalName, root.toString(), opts);
@@ -33,7 +32,7 @@ module.exports = opts => {
             // thes sourceMappingURL comment.
             if (opts.includeMap) {
                 // Extract the stringifier
-                let str = postcss.stringify;
+                let str = stringify;
                 if (result.opts.syntax) str = result.opts.syntax.stringify;
                 if (result.opts.stringifier) str = result.opts.stringifier;
                 if (str.stringify) str = str.stringify;
