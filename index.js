@@ -20,7 +20,7 @@ module.exports = opts => {
 
     return {
         postcssPlugin: "postcss-hash",
-        Once(root, { result, stringify }) {
+        OnceExit(root, { result, stringify }) {
             // replace filename
             const originalName = result.opts.to;
             result.opts.to = utils.rename(originalName, root.toString(), opts);
