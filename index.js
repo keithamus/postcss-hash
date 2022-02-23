@@ -13,7 +13,8 @@ module.exports = opts => {
             trim: 10,
             manifest: "./manifest.json",
             includeMap: false,
-            name: utils.defaultName
+            name: utils.defaultName,
+            updateEntry: utils.updateEntry
         },
         opts
     );
@@ -67,7 +68,7 @@ module.exports = opts => {
             }
 
             // create/update manifest.json
-            const newData = utils.data(originalName, result.opts.to);
+            const newData = utils.data(originalName, result.opts.to, opts);
 
             // You're probably thinking "Why not make all of the following async?!"
             // Well, using the async versions causes race conditions when this plugin
