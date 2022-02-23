@@ -66,7 +66,7 @@ Hash's length.
 ### manifest `(string, default: './manifest.json')`
 Will output a `manifest` file with `key: value` pairs.
 
-### name `(function, default: ({dir, name, hash, ext}) => path.join(dir, name + '.' + hash + ext)
+### name `(function, default: ({dir, name, hash, ext}) => path.join(dir, name + '.' + hash + ext)`
 Pass a function to customise the name of the output file. The function is given an object of string values:
 
  - dir: the directory name as a string
@@ -78,7 +78,26 @@ Pass a function to customise the name of the output file. The function is given 
 1. The values will be either appended or replaced. If this file needs be recreated on each run, you'll have to manually delete it.
 2. `key`s are generated with files' `basename`. If you have `./input/A/one.css` & `./input/B/one.css`, only the last entry will exist.
 
+### updateEntry `(function, default: (originalName, hashedName) => { "fileName.css": "hashedName.css"}`
 
+Pass a function to customize manifest entries. The function is given
+
+- `originalName`: the original file name.
+- `hashedName`: the compiled file name.
+
+The function must return an object with the fileName as a key and whatever value you want. E.g.:
+
+```js
+function e(originalName, hashedName) {
+  var newData = {};
+  var key = path.parse(originalName).base;
+  var value = path.parse(hashedName).base;
+
+  newData[key] = { src: value, css: true };
+
+  return newData;
+}
+```
 
 See [PostCSS] docs for examples for your environment.
 

@@ -34,16 +34,19 @@ function rename(file, css, opts) {
 will return an object of {oldname: newname} to append/update into manifest file.
 input: ('./css/file.css', './file.a1b2c3d4e5.css')   output: {"file.css": "file.a1b2c3d4e5.css"}
 */
-function data(originalName, hashedName) {
-    var newData = {};
+function data(originalName, hashedName, opts) {
     var key = path.parse(originalName).base;
     var value = path.parse(hashedName).base;
 
-    newData[key] = value;
-    return newData;
+    return opts.updateEntry(key, value);
+}
+
+function updateEntry(originalName, hashedName) {
+    return { [originalName]: hashedName };
 }
 
 module.exports.hash = hash;
 module.exports.rename = rename;
 module.exports.defaultName = defaultName;
 module.exports.data = data;
+module.exports.updateEntry = updateEntry;

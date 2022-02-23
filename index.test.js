@@ -72,11 +72,16 @@ test("rename module", () => {
 
 test("data module", () => {
     const file = join(tmpdir(), "file01.css");
-    const opts = { algorithm: "md5", trim: 5, name: utils.defaultName };
+    const opts = {
+        algorithm: "md5",
+        trim: 5,
+        name: utils.defaultName,
+        updateEntry: utils.updateEntry
+    };
     const renamedFile = utils.rename(file, readFileSync(file, "utf-8"), opts);
 
     expect.assertions(1);
-    expect(utils.data(file, renamedFile)).toBeInstanceOf(Object);
+    expect(utils.data(file, renamedFile, opts)).toBeInstanceOf(Object);
 });
 
 test("plugin", () => {
@@ -161,4 +166,47 @@ test("plugin will hash sourcemap with includeMap", () => {
             expect(result.opts.to).toMatch(new RegExp(hash));
             expect(result.warnings().length).toBe(0);
         });
+});
+
+test("plugin with custom manifest generation", () => {
+    const opts = {
+        algorithm: "md5",
+        trim: 5,
+        manifest: join(tmpdir(), "manifest.json"),
+        updateEntry: (original, hashed) => ({
+            [original]: {
+                src: hashed
+            }
+        })
+    };
+
+    const files = readdirSync(tmpdir()).filter(name => /css$/.test(name));
+
+    return Promise.all(
+        files.map(file => {
+            const filePath = join(tmpdir(), file);
+            return postcss([plugin(opts)])
+                .process(readFileSync(filePath, "utf-8"), {
+                    from: file,
+                    to: file
+                })
+                .then(result => {
+                    const hash = utils.hash(
+                        readFileSync(filePath, "utf-8"),
+                        opts.algorithm,
+                        opts.trim
+                    );
+
+                    expect(result.opts.to).toMatch(new RegExp(hash));
+                    expect(result.warnings().length).toBe(0);
+                    const manifest = JSON.parse(
+                        readFileSync(join(tmpdir(), "manifest.json"))
+                    );
+                    expect(typeof manifest).toBe("object");
+                    expect(manifest).toHaveProperty([file], {
+                        src: result.opts.to
+                    });
+                });
+        })
+    );
 });
